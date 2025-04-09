@@ -1,12 +1,21 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using MasterList.Data;
+using MasterList.Services;
+using OfficeOpenXml;
+// Set license context for EPPlus 6.x
+ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<MasterListContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("MasterListContext") ?? throw new InvalidOperationException("Connection string 'MasterListContext' not found.")));
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+
+// Register your Excel services
+builder.Services.AddScoped<ExcelReaderService>();
+builder.Services.AddScoped<ExcelWriterService>();
 
 var app = builder.Build();
 
@@ -27,6 +36,6 @@ app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+    pattern: "{controller=MLists}/{action=Index}/{id?}");
 
 app.Run();

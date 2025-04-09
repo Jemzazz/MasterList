@@ -1,46 +1,60 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using MasterList.Data;
 using MasterList.Models;
+using MasterList.Services;
+using System.IO;
 
 namespace MasterList.Controllers
 {
     public class MListsController : Controller
     {
-        private readonly MasterListContext _context;
+        private readonly ExcelReaderService _reader;
+        private readonly ExcelWriterService _writer;
+        private readonly string _excelPath;
 
-        public MListsController(MasterListContext context)
+        public MListsController(ExcelReaderService reader, ExcelWriterService writer)
         {
-            _context = context;
+            _reader = reader;
+            _writer = writer;
+            _excelPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "data", "201 FILES MASTERLIST.xlsx");
+
+            // Initialize if file doesn't exist
+            if (!System.IO.File.Exists(_excelPath))
+            {
+                Directory.CreateDirectory(Path.GetDirectoryName(_excelPath));
+                _writer.WriteToExcel(_excelPath, new List<MList>());
+            }
         }
 
         // GET: MLists
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
-            return View(await _context.MList.ToListAsync());
+            // Debugging: Check if file exists
+            var data = _reader.ReadExcelFile(_excelPath);
+
+            // Filter out any records with ID=0 (header row)
+            data = data.Where(x => x.Id != 0).ToList();
+
+            return View(data);
         }
 
         // GET: MLists/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public IActionResult Details(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
-            var mList = await _context.MList
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (mList == null)
+            try
             {
-                return NotFound();
+                var data = _reader.ReadExcelFile(_excelPath);
+                var item = data.FirstOrDefault(m => m.Id == id);
+                return item == null ? NotFound() : View(item);
             }
-
-            return View(mList);
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = "Error loading details: " + ex.Message;
+                return RedirectToAction(nameof(Index));
+            }
         }
 
         // GET: MLists/Create
@@ -50,108 +64,105 @@ namespace MasterList.Controllers
         }
 
         // POST: MLists/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,FirstName,LastName,MiddleName,Category,LocationCode,Position,School")] MList mList)
+        public IActionResult Create(MList mList)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(mList);
-                await _context.SaveChangesAsync();
+                var data = _reader.ReadExcelFile(_excelPath);
+                mList.Id = data.Any() ? data.Max(x => x.Id) + 1 : 1;
+                data.Add(mList);
+                _writer.WriteToExcel(_excelPath, data);
                 return RedirectToAction(nameof(Index));
             }
             return View(mList);
         }
 
         // GET: MLists/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        public IActionResult Edit(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
-            var mList = await _context.MList.FindAsync(id);
-            if (mList == null)
+            try
             {
-                return NotFound();
+                var data = _reader.ReadExcelFile(_excelPath);
+                var item = data.FirstOrDefault(m => m.Id == id);
+                return item == null ? NotFound() : View(item);
             }
-            return View(mList);
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = "Error loading record for edit: " + ex.Message;
+                return RedirectToAction(nameof(Index));
+            }
         }
 
         // POST: MLists/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,FirstName,LastName,MiddleName,Category,LocationCode,Position,School")] MList mList)
+        public IActionResult Edit(int id, MList mList)
         {
-            if (id != mList.Id)
-            {
-                return NotFound();
-            }
+            if (id != mList.Id) return NotFound();
 
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid) return View(mList);
+
+            try
             {
-                try
-                {
-                    _context.Update(mList);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!MListExists(mList.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
+                var data = _reader.ReadExcelFile(_excelPath);
+                var index = data.FindIndex(m => m.Id == id);
+                if (index == -1) return NotFound();
+
+                data[index] = mList;
+                _writer.WriteToExcel(_excelPath, data);
+                TempData["SuccessMessage"] = "Record updated successfully";
                 return RedirectToAction(nameof(Index));
             }
-            return View(mList);
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("", "Error updating record: " + ex.Message);
+                return View(mList);
+            }
         }
 
         // GET: MLists/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        public IActionResult Delete(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
-            var mList = await _context.MList
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (mList == null)
+            try
             {
-                return NotFound();
+                var data = _reader.ReadExcelFile(_excelPath);
+                var item = data.FirstOrDefault(m => m.Id == id);
+                return item == null ? NotFound() : View(item);
             }
-
-            return View(mList);
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = "Error loading record for deletion: " + ex.Message;
+                return RedirectToAction(nameof(Index));
+            }
         }
 
         // POST: MLists/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public IActionResult DeleteConfirmed(int id)
         {
-            var mList = await _context.MList.FindAsync(id);
-            if (mList != null)
+            try
             {
-                _context.MList.Remove(mList);
+                var data = _reader.ReadExcelFile(_excelPath);
+                var item = data.FirstOrDefault(m => m.Id == id);
+                if (item == null) return NotFound();
+
+                data.Remove(item);
+                _writer.WriteToExcel(_excelPath, data);
+                TempData["SuccessMessage"] = "Record deleted successfully";
+                return RedirectToAction(nameof(Index));
             }
-
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
-
-        private bool MListExists(int id)
-        {
-            return _context.MList.Any(e => e.Id == id);
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = "Error deleting record: " + ex.Message;
+                return RedirectToAction(nameof(Index));
+            }
         }
     }
 }

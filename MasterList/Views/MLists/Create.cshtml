@@ -1,63 +1,200 @@
 ﻿@model MasterList.Models.MList
-
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Add New Record";
 }
 
-<h1>Create</h1>
+<div class="container mt-4">
+    <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white">
+            <h4 class="mb-0">@ViewData["Title"]</h4>
+        </div>
+        <div class="card-body">
+            <form asp-action="Create">
+                <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
 
-<h4>MList</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="FirstName" class="control-label"></label>
-                <input asp-for="FirstName" class="form-control" />
-                <span asp-validation-for="FirstName" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="LastName" class="control-label"></label>
-                <input asp-for="LastName" class="form-control" />
-                <span asp-validation-for="LastName" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="MiddleName" class="control-label"></label>
-                <input asp-for="MiddleName" class="form-control" />
-                <span asp-validation-for="MiddleName" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Category" class="control-label"></label>
-                <input asp-for="Category" class="form-control" />
-                <span asp-validation-for="Category" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="LocationCode" class="control-label"></label>
-                <input asp-for="LocationCode" class="form-control" />
-                <span asp-validation-for="LocationCode" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Position" class="control-label"></label>
-                <input asp-for="Position" class="form-control" />
-                <span asp-validation-for="Position" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="School" class="control-label"></label>
-                <input asp-for="School" class="form-control" />
-                <span asp-validation-for="School" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-        </form>
+                <div class="row g-3">
+                    <!-- Personal Information -->
+                    <div class="col-md-4">
+                        <label asp-for="FirstName" class="form-label"></label>
+                        <input asp-for="FirstName" class="form-control" />
+                        <span asp-validation-for="FirstName" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-4">
+                        <label asp-for="LastName" class="form-label"></label>
+                        <input asp-for="LastName" class="form-control" />
+                        <span asp-validation-for="LastName" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-4">
+                        <label asp-for="MiddleName" class="form-label"></label>
+                        <input asp-for="MiddleName" class="form-control" />
+                        <span asp-validation-for="MiddleName" class="text-danger"></span>
+                    </div>
+
+                    <!-- Category Dropdown -->
+                    <div class="col-md-4">
+                        <label asp-for="Category" class="form-label"></label>
+                        <select asp-for="Category" class="form-select">
+                            <option value="">-- Select Category --</option>
+                            <option value="ALS MOBILE TEACHER">ALS MOBILE TEACHER</option>
+                            <option value="DECEASED">DECEASED</option>
+                            <option value="DECLINED">DECLINED</option>
+                            <option value="DISMISSED">DISMISSED</option>
+                            <option value="DROPPED FROM THE ROLLS">DROPPED FROM THE ROLLS</option>
+                            <option value="ELEM">ELEM</option>
+                            <option value="NON-TEACHING">NON-TEACHING</option>
+                            <option value="RESIGN">RESIGN</option>
+                            <option value="RETIRED">RETIRED</option>
+                            <option value="SEC">SEC</option>
+                            <option value="SEPARATED">SEPARATED</option>
+                            <option value="TERMINATED">TERMINATED</option>
+                            <option value="TRANSFERED">TRANSFERED</option>
+                        </select>
+                        <span asp-validation-for="Category" class="text-danger"></span>
+                    </div>
+
+                    <!-- Location Code -->
+                    <div class="col-md-4">
+                        <label asp-for="LocationCode" class="form-label"></label>
+                        <input asp-for="LocationCode" class="form-control" placeholder="A1, A2, etc." />
+                        <span asp-validation-for="LocationCode" class="text-danger"></span>
+                    </div>
+
+                    <!-- Position Dropdown -->
+                    <div class="col-md-4">
+                        <label asp-for="Position" class="form-label"></label>
+                        <select asp-for="Position" class="form-select">
+                            <option value="">-- Select Position --</option>
+                            <option value="ADMINISTRATIVE AIDE I">ADMINISTRATIVE AIDE I</option>
+                            <option value="ADMINISTRTIVE ASSISTANT II">ADMINISTRTIVE ASSISTANT II</option>
+                            <option value="ADMINISTRATIVE ASSISTANT III">ADMINISTRATIVE ASSISTANT III</option>
+                            <option value="ADMINISTRATIVE OFFICER II">ADMINISTRATIVE OFFICER II</option>
+                            <option value="ADMINISTRAIVE OFFICER III">ADMINISTRAIVE OFFICER III</option>
+                            <option value="EDUCATION PROGRAM SUPERVISOR">EDUCATION PROGRAM SUPERVISOR</option>
+                            <option value="ELEMTARY GRADE TEACHER">ELEMTARY GRADE TEACHER</option>
+                            <option value="ELEMENTARY SCHOOL PRINCIPAL I">ELEMENTARY SCHOOL PRINCIPAL I</option>
+                            <option value="GUIDANCE CORDINATOR III">GUIDANCE CORDINATOR III</option>
+                            <option value="HEAD TEACHER I">HEAD TEACHER I</option>
+                            <option value="HEAD TEACHER II">HEAD TEACHER II</option>
+                            <option value="LAWYER III">LAWYER III</option>
+                            <option value="MASTER TEACHER">MASTER TEACHER</option>
+                            <option value="MASTER TEACHER I">MASTER TEACHER I</option>
+                            <option value="MASTER TEACHER II">MASTER TEACHER II</option>
+                            <option value="MASTER TEACHER II(SHS)">MASTER TEACHER II(SHS)</option>
+                            <option value="MEDICAL OFFICER III">MEDICAL OFFICER III</option>
+                            <option value="NURSE II">NURSE II</option>
+                            <option value="NURSE II(SHS)">NURSE II(SHS)</option>
+                            <option value="PUBLIC SHOOL DISTRICT SUPERVISOR">PUBLIC SHOOL DISTRICT SUPERVISOR</option>
+                            <option value="SCHOOL JANITOR">SCHOOL JANITOR</option>
+                            <option value="SCHOOL PRINCIPAL I">SCHOOL PRINCIPAL I</option>
+                            <option value="SCHOOL DIVISION SUPERINTENDENT">SCHOOL DIVISION SUPERINTENDENT</option>
+                            <option value="SCHOOL DIVISION SUPERINTENDENT(OIC)">SCHOOL DIVISION SUPERINTENDENT(OIC)</option>
+                            <option value="SENIOR EDUCATION PROGRAM SPECIALIST">SENIOR EDUCATION PROGRAM SPECIALIST</option>
+                            <option value="SPECIAL EDUCATION TEACHER I">SPECIAL EDUCATION TEACHER I</option>
+                            <option value="SPECIAL EDUCATION TEACHER II">SPECIAL EDUCATION TEACHER II</option>
+                            <option value="SPECIAL EDUCATION TEACHER III">SPECIAL EDUCATION TEACHER III</option>
+                            <option value="SPECIAL SCIENCE TEACHER I">SPECIAL SCIENCE TEACHER I</option>
+                            <option value="SPECIAL SCIENCE TEACHER I(SHS)">SPECIAL SCIENCE TEACHER I(SHS)</option>
+                            <option value="TEACHER I">TEACHER I</option>
+                            <option value="TEACHER II">TEACHER II</option>
+                            <option value="TEACHER III">TEACHER III</option>
+                            <option value="TEACHER(SHS)">TEACHER(SHS)</option>
+                            <option value="TEACHER I(SHS)">TEACHER I(SHS)</option>
+                            <option value="TEACHER II(SHS)">TEACHER II(SHS)</option>
+                            <option value="TEACHER III(SHS)">TEACHER III(SHS)</option>
+                            <option value="TEACHER 1(ALS)">TEACHER 1(ALS)</option>
+                            <option value="UTILITY WORKER I">UTILITY WORKER I</option>
+                        </select>
+                        <span asp-validation-for="Position" class="text-danger"></span>
+                    </div>
+
+                    <!-- School Dropdown -->
+                    <div class="col-md-4">
+                        <label asp-for="School" class="form-label"></label>
+                        <select asp-for="School" class="form-select">
+                            <option value="">-- Select School --</option>
+                            <option value="BULACAO NHS">BULACAO NHS</option>
+                            <option value="CANDULAWAN NHS">CANDULAWAN NHS</option>
+                            <option value="CANSOJONG NHS">CANSOJONG NHS</option>
+                            <option value="DUMLOG NHS">DUMLOG NHS</option>
+                            <option value="DUMLOG EHS">DUMLOG EHS</option>
+                            <option value="JACLUPAN NHS">JACLUPAN NHS</option>
+                            <option value="LAGTANG NHS">LAGTANG NHS</option>
+                            <option value="LAWAAN III NHS">LAWAAN III NHS</option>
+                            <option value="LAWAAN NHS">LAWAAN NHS</option>
+                            <option value="MOHON DA NHS">MOHON DA NHS</option>
+                            <option value="MOHON ES">MOHON ES</option>
+                            <option value="MOHON NHS">MOHON NHS</option>
+                            <option value="POOC NHS">POOC NHS</option>
+                            <option value="SAN ROQUE NHS">SAN ROQUE NHS</option>
+                            <option value="SAN ISIDRO NHS">SAN ISIDRO NHS</option>
+                            <option value="TABUNOK NHS">TABUNOK NHS</option>
+                            <option value="TALISAY CITY CENTRAL SCHOOL">TALISAY CITY CENTRAL SCHOOL</option>
+                            <option value="TALISAY CITY NHS">TALISAY CITY NHS</option>
+                            <option value="TALISAY CITY SCIENCE HS">TALISAY CITY SCIENCE HS</option>
+                            <option value="TANGKE NHS">TANGKE NHS</option>
+                            <option value="TAPUL NHS">TAPUL NHS</option>
+                        </select>
+                        <span asp-validation-for="School" class="text-danger"></span>
+                    </div>
+
+                    <!-- Form Buttons -->
+                    <div class="col-12 mt-4">
+                        <button type="submit" class="btn btn-primary me-2">
+                            <i class="fas fa-save"></i> Save Record
+                        </button>
+                        <a asp-action="Index" class="btn btn-secondary">
+                            <i class="fas fa-arrow-left"></i> Back to List
+                        </a>
+                    </div>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
+@section Styles {
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+    <style>
+        .card {
+            border-radius: 0.5rem;
+        }
+
+        .form-label {
+            font-weight: 500;
+        }
+
+        select.form-select {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23343a40' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 0.75rem center;
+            background-size: 16px 12px;
+        }
+
+        .btn i {
+            margin-right: 5px;
+        }
+    </style>
+}
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script>
+        // Enhance select dropdowns with search functionality
+        $(document).ready(function() {
+            $('select').each(function() {
+                if (this.options.length > 10) {
+                    $(this).select2({
+                        placeholder: $(this).find('option:first').text(),
+                        width: '100%',
+                        dropdownParent: $(this).parent()
+                    });
+                }
+            });
+        });
+    </script>
 }
