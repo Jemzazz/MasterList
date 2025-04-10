@@ -32,11 +32,23 @@ namespace MasterList.Services
                 const int positionCol = 7;    // G
                 const int schoolCol = 12;     // L
 
-                for (int row = 2; row <= rowCount; row++) // Skip header row
+                int previousId = -1;
+
+                for (int row = 2; row <= rowCount; row++)
                 {
-                    // Skip rows with invalid IDs
                     var idValue = worksheet.Cells[row, idCol].Text;
                     if (string.IsNullOrWhiteSpace(idValue) || idValue == "0" || idValue == "ID")
+                        continue;
+
+                    int currentId = GetIntValue(worksheet.Cells[row, idCol]);
+                    if (currentId == previousId)
+                        continue;
+
+                    var firstName = GetStringValue(worksheet.Cells[row, firstNameCol]);
+                    var lastName = GetStringValue(worksheet.Cells[row, lastNameCol]);
+
+                    // Skip if essential fields are blank
+                    if (string.IsNullOrWhiteSpace(firstName) && string.IsNullOrWhiteSpace(lastName))
                         continue;
 
                     records.Add(new MList
@@ -48,7 +60,7 @@ namespace MasterList.Services
                         Category = GetStringValue(worksheet.Cells[row, categoryCol]),
                         LocationCode = GetStringValue(worksheet.Cells[row, locationCol]),
                         Position = GetStringValue(worksheet.Cells[row, positionCol]),
-                        School = colCount >= schoolCol ? GetStringValue(worksheet.Cells[row, schoolCol]) : string.Empty
+                        School = GetStringValue(worksheet.Cells[row, 12]) // Column L
                     });
                 }
             }

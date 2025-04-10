@@ -64,19 +64,58 @@ namespace MasterList.Controllers
         }
 
         // POST: MLists/Create
+        private static readonly object _fileLock = new object();
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Create(MList mList)
         {
             if (ModelState.IsValid)
             {
-                var data = _reader.ReadExcelFile(_excelPath);
-                mList.Id = data.Any() ? data.Max(x => x.Id) + 1 : 1;
-                data.Add(mList);
-                _writer.WriteToExcel(_excelPath, data);
+                lock (_fileLock) // Prevent concurrent access
+                {
+                    var data = _reader.ReadExcelFile(_excelPath);
+                    var existingIds = new HashSet<int>(data.Select(x => x.Id));
+
+                    // Find the first available ID
+                    int newId = 1;
+                    while (existingIds.Contains(newId))
+                    {
+                        newId++;
+                    }
+
+                    mList.Id = newId;
+                    data.Add(mList);
+                    _writer.WriteToExcel(_excelPath, data);
+                }
                 return RedirectToAction(nameof(Index));
             }
             return View(mList);
+        }
+
+        public IActionResult FixDuplicates()
+        {
+            lock (_fileLock)
+            {
+                var data = _reader.ReadExcelFile(_excelPath);
+
+                // Remove duplicates (keep first occurrence)
+                var cleanData = data
+                    .GroupBy(x => x.Id)
+                    .Select(g => g.First())
+                    .OrderBy(x => x.Id)
+                    .ToList();
+
+                // Reassign sequential IDs
+                for (int i = 0; i < cleanData.Count; i++)
+                {
+                    cleanData[i].Id = i + 1;
+                }
+
+                _writer.WriteToExcel(_excelPath, cleanData);
+                TempData["SuccessMessage"] = $"Fixed {data.Count - cleanData.Count} duplicates";
+                return RedirectToAction(nameof(Index));
+            }
         }
 
         // GET: MLists/Edit/5
@@ -102,26 +141,23 @@ namespace MasterList.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Edit(int id, MList mList)
         {
-            if (id != mList.Id) return NotFound();
+            if (id != mList.Id)
+                return NotFound();
 
-            if (!ModelState.IsValid) return View(mList);
-
-            try
+            if (ModelState.IsValid)
             {
                 var data = _reader.ReadExcelFile(_excelPath);
                 var index = data.FindIndex(m => m.Id == id);
-                if (index == -1) return NotFound();
+                if (index == -1)
+                    return NotFound();
 
                 data[index] = mList;
                 _writer.WriteToExcel(_excelPath, data);
+
                 TempData["SuccessMessage"] = "Record updated successfully";
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Details), new { id = mList.Id });
             }
-            catch (Exception ex)
-            {
-                ModelState.AddModelError("", "Error updating record: " + ex.Message);
-                return View(mList);
-            }
+            return View(mList);
         }
 
         // GET: MLists/Delete/5
@@ -147,22 +183,16 @@ namespace MasterList.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult DeleteConfirmed(int id)
         {
-            try
-            {
-                var data = _reader.ReadExcelFile(_excelPath);
-                var item = data.FirstOrDefault(m => m.Id == id);
-                if (item == null) return NotFound();
+            var data = _reader.ReadExcelFile(_excelPath);
+            var item = data.FirstOrDefault(m => m.Id == id);
+            if (item == null)
+                return NotFound();
 
-                data.Remove(item);
-                _writer.WriteToExcel(_excelPath, data);
-                TempData["SuccessMessage"] = "Record deleted successfully";
-                return RedirectToAction(nameof(Index));
-            }
-            catch (Exception ex)
-            {
-                TempData["ErrorMessage"] = "Error deleting record: " + ex.Message;
-                return RedirectToAction(nameof(Index));
-            }
+            data.Remove(item);
+            _writer.WriteToExcel(_excelPath, data);
+
+            TempData["SuccessMessage"] = "Record deleted successfully";
+            return RedirectToAction(nameof(Index));
         }
     }
 }

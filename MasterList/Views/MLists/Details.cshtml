@@ -1,60 +1,91 @@
 ﻿@model MasterList.Models.MList
-
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Record Details";
 }
 
-<h1>Details</h1>
+<div class="container mt-4">
+    <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white">
+            <div class="d-flex justify-content-between align-items-center">
+                <h4 class="mb-0">@ViewData["Title"]</h4>
+                <a asp-action="Index" class="btn btn-light btn-sm">
+                    <i class="fas fa-arrow-left"></i> Back
+                </a>
+            </div>
+        </div>
+        <div class="card-body">
+            <dl class="row">
+                <dt class="col-sm-3">ID</dt>
+                <dd class="col-sm-9">@Model.Id</dd>
 
-<div>
-    <h4>MList</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.FirstName)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.FirstName)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.LastName)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.LastName)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.MiddleName)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.MiddleName)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Category)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Category)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.LocationCode)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.LocationCode)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Position)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Position)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.School)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.School)
-        </dd>
-    </dl>
+                <dt class="col-sm-3">First Name</dt>
+                <dd class="col-sm-9">@Model.FirstName</dd>
+
+                <dt class="col-sm-3">Last Name</dt>
+                <dd class="col-sm-9">@Model.LastName</dd>
+
+                <dt class="col-sm-3">Middle Name</dt>
+                <dd class="col-sm-9">@Model.MiddleName</dd>
+
+                <dt class="col-sm-3">Category</dt>
+                <dd class="col-sm-9">
+                    <span class="badge @GetCategoryBadgeClass(Model.Category)">
+                        @Model.Category
+                    </span>
+                </dd>
+
+                <dt class="col-sm-3">Location Code</dt>
+                <dd class="col-sm-9">@Model.LocationCode</dd>
+
+                <dt class="col-sm-3">Position</dt>
+                <dd class="col-sm-9">@Model.Position</dd>
+
+                <dt class="col-sm-3">School</dt>
+                <dd class="col-sm-9">
+                    @if(string.IsNullOrEmpty(Model.School))
+                    {
+                        <span class="text-muted">Not specified</span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-success">@Model.School</span>
+                    }
+                </dd>
+            </dl>
+        </div>
+        <div class="card-footer text-end">
+            <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">
+                <i class="fas fa-edit"></i> Edit
+            </a>
+        </div>
+    </div>
 </div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
-</div>
+
+@section Styles {
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+    <style>
+        .card {
+            border-radius: 0.5rem;
+        }
+        dt {
+            font-weight: 500;
+        }
+        .badge {
+            font-size: 0.9em;
+            padding: 0.5em 0.75em;
+        }
+    </style>
+}
+
+@functions {
+    string GetCategoryBadgeClass(string category)
+    {
+        return category switch
+        {
+            "ELEM" => "bg-primary",
+            "SEC" => "bg-success",
+            "SHS" => "bg-info",
+            _ => "bg-secondary"
+        };
+    }
+}

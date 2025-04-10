@@ -1,0 +1,68 @@
+﻿@model MasterList.Models.MList
+
+<div class="col-md-4">
+    <label asp-for="FirstName" class="form-label"></label>
+    <input asp-for="FirstName" class="form-control" />
+    <span asp-validation-for="FirstName" class="text-danger"></span>
+</div>
+
+<div class="col-md-4">
+    <label asp-for="LastName" class="form-label"></label>
+    <input asp-for="LastName" class="form-control" />
+    <span asp-validation-for="LastName" class="text-danger"></span>
+</div>
+
+<div class="col-md-4">
+    <label asp-for="MiddleName" class="form-label"></label>
+    <input asp-for="MiddleName" class="form-control" />
+    <span asp-validation-for="MiddleName" class="text-danger"></span>
+</div>
+
+<div class="col-md-4">
+    <label asp-for="Category" class="form-label"></label>
+    <select asp-for="Category" class="form-select">
+        <option value="">-- Select Category --</option>
+        <option value="ALS MOBILE TEACHER">ALS MOBILE TEACHER</option>
+        <option value="DECEASED">DECEASED</option>
+        <option value="DECLINED">DECLINED</option>
+        <option value="DISMISSED">DISMISSED</option>
+        <option value="DROPPED FROM THE ROLLS">DROPPED FROM THE ROLLS</option>
+        <option value="ELEM">ELEM</option>
+        <option value="NON-TEACHING">NON-TEACHING</option>
+        <option value="RESIGN">RESIGN</option>
+        <option value="RETIRED">RETIRED</option>
+        <option value="SEC">SEC</option>
+        <option value="SEPARATED">SEPARATED</option>
+        <option value="TERMINATED">TERMINATED</option>
+        <option value="TRANSFERED">TRANSFERED</option>
+    </select>
+    <span asp-validation-for="Category" class="text-danger"></span>
+</div>
+
+<div class="col-md-4">
+    <label asp-for="LocationCode" class="form-label"></label>
+    <input asp-for="LocationCode" class="form-control" placeholder="A1, A2, etc." />
+    <span asp-validation-for="LocationCode" class="text-danger"></span>
+</div>
+
+<div class="col-md-4">
+    <label asp-for="Position" class="form-label"></label>
+    <select asp-for="Position" class="form-select">
+        <option value="">-- Select Position --</option>
+        <option value="ADMINISTRATIVE AIDE I">ADMINISTRATIVE AIDE I</option>
+        <option value="ADMINISTRTIVE ASSISTANT II">ADMINISTRTIVE ASSISTANT II</option>
+        <!-- Include all position options here -->
+    </select>
+    <span asp-validation-for="Position" class="text-danger"></span>
+</div>
+
+<div class="col-md-4">
+    <label asp-for="School" class="form-label"></label>
+    <select asp-for="School" class="form-select">
+        <option value="">-- Select School --</option>
+        <option value="BULACAO NHS">BULACAO NHS</option>
+        <option value="CANDULAWAN NHS">CANDULAWAN NHS</option>
+        <!-- Include all school options here -->
+    </select>
+    <span asp-validation-for="School" class="text-danger"></span>
+</div>

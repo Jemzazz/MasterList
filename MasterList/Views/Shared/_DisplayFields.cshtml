@@ -1,0 +1,51 @@
+﻿@model MasterList.Models.MList
+
+<dt class="col-sm-3">ID</dt>
+<dd class="col-sm-9">@Model.Id</dd>
+
+<dt class="col-sm-3">First Name</dt>
+<dd class="col-sm-9">@Model.FirstName</dd>
+
+<dt class="col-sm-3">Last Name</dt>
+<dd class="col-sm-9">@Model.LastName</dd>
+
+<dt class="col-sm-3">Middle Name</dt>
+<dd class="col-sm-9">@Model.MiddleName</dd>
+
+<dt class="col-sm-3">Category</dt>
+<dd class="col-sm-9">
+    <span class="badge @GetCategoryBadgeClass(Model.Category)">
+        @Model.Category
+    </span>
+</dd>
+
+<dt class="col-sm-3">Location Code</dt>
+<dd class="col-sm-9">@Model.LocationCode</dd>
+
+<dt class="col-sm-3">Position</dt>
+<dd class="col-sm-9">@Model.Position</dd>
+
+<dt class="col-sm-3">School</dt>
+<dd class="col-sm-9">
+    @if (string.IsNullOrEmpty(Model.School))
+    {
+        <span class="text-muted">Not specified</span>
+    }
+    else
+    {
+        <span class="badge bg-success">@Model.School</span>
+    }
+</dd>
+
+@functions {
+    string GetCategoryBadgeClass(string category)
+    {
+        return category switch
+        {
+            "ELEM" => "bg-primary",
+            "SEC" => "bg-success",
+            "SHS" => "bg-info",
+            _ => "bg-secondary"
+        };
+    }
+}
