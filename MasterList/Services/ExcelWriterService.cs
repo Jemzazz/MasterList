@@ -17,25 +17,21 @@ namespace MasterList.Services
                 var worksheet = package.Workbook.Worksheets[0] ??
                                package.Workbook.Worksheets.Add("MasterList");
 
-                // Clear existing data except headers
-                if (worksheet.Dimension?.Rows > 1)
-                {
-                    worksheet.Cells[2, 1, worksheet.Dimension.End.Row, worksheet.Dimension.End.Column].Clear();
-                }
+                // Find the first empty row
+                int newRow = worksheet.Dimension?.Rows + 1 ?? 2;
 
-                // Write sorted data
-                int row = 2;
-                foreach (var item in data.OrderBy(x => x.Id))
-                {
-                    worksheet.Cells[row, 1].Value = item.Id;
-                    worksheet.Cells[row, 2].Value = item.FirstName;
-                    worksheet.Cells[row, 3].Value = item.LastName;
-                    worksheet.Cells[row, 4].Value = item.MiddleName;
-                    worksheet.Cells[row, 5].Value = item.Category;
-                    worksheet.Cells[row, 6].Value = item.LocationCode;
-                    worksheet.Cells[row, 7].Value = item.Position;
-                    worksheet.Cells[row, 12].Value = item.School; // Column L
-                }
+                // Get the last record (newly added)
+                var newItem = data.Last();
+
+                // Write only the new record
+                worksheet.Cells[newRow, 1].Value = newItem.Id;
+                worksheet.Cells[newRow, 2].Value = newItem.FirstName;
+                worksheet.Cells[newRow, 3].Value = newItem.LastName;
+                worksheet.Cells[newRow, 4].Value = newItem.MiddleName;
+                worksheet.Cells[newRow, 5].Value = newItem.Category;
+                worksheet.Cells[newRow, 6].Value = newItem.LocationCode;
+                worksheet.Cells[newRow, 7].Value = newItem.Position;
+                worksheet.Cells[newRow, 12].Value = newItem.School;
 
                 package.Save();
             }

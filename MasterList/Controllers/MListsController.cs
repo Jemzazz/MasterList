@@ -70,27 +70,26 @@ namespace MasterList.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Create(MList mList)
         {
-            if (ModelState.IsValid)
-            {
-                lock (_fileLock) // Prevent concurrent access
-                {
-                    var data = _reader.ReadExcelFile(_excelPath);
-                    var existingIds = new HashSet<int>(data.Select(x => x.Id));
+            if (!ModelState.IsValid)
+                return View(mList);
 
-                    // Find the first available ID
-                    int newId = 1;
-                    while (existingIds.Contains(newId))
-                    {
-                        newId++;
-                    }
+            string filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "data", "201 FILES MASTERLIST.xlsx");
 
-                    mList.Id = newId;
-                    data.Add(mList);
-                    _writer.WriteToExcel(_excelPath, data);
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            return View(mList);
+            var reader = new ExcelReaderService();
+            List<MList> existingRecords = reader.ReadExcelFile(filePath);
+
+            // Generate new unique ID
+            int maxId = existingRecords.Any() ? existingRecords.Max(x => x.Id) : 200;
+            mList.Id = maxId + 1;
+
+            // Add the new record
+            existingRecords.Add(mList);
+
+            // Save to Excel
+            var writer = new ExcelWriterService();
+            writer.WriteToExcel(filePath, existingRecords);
+
+            return RedirectToAction(nameof(Index));
         }
 
         public IActionResult FixDuplicates()
