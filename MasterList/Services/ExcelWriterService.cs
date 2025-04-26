@@ -15,23 +15,33 @@ namespace MasterList.Services
             using (var package = new ExcelPackage(fileInfo))
             {
                 var worksheet = package.Workbook.Worksheets[0] ??
-                               package.Workbook.Worksheets.Add("MasterList");
+                                package.Workbook.Worksheets.Add("MasterList");
 
-                // Find the first empty row
-                int newRow = worksheet.Dimension?.Rows + 1 ?? 2;
+                worksheet.Cells.Clear(); // Clear the worksheet before writing
 
-                // Get the last record (newly added)
-                var newItem = data.Last();
+                // Header row (optional, remove if not needed)
+                worksheet.Cells[1, 1].Value = "ID";
+                worksheet.Cells[1, 2].Value = "First Name";
+                worksheet.Cells[1, 3].Value = "Last Name";
+                worksheet.Cells[1, 4].Value = "Middle Name";
+                worksheet.Cells[1, 5].Value = "Category";
+                worksheet.Cells[1, 6].Value = "Location Code";
+                worksheet.Cells[1, 7].Value = "Position";
+                worksheet.Cells[1, 12].Value = "School";
 
-                // Write only the new record
-                worksheet.Cells[newRow, 1].Value = newItem.Id;
-                worksheet.Cells[newRow, 2].Value = newItem.FirstName;
-                worksheet.Cells[newRow, 3].Value = newItem.LastName;
-                worksheet.Cells[newRow, 4].Value = newItem.MiddleName;
-                worksheet.Cells[newRow, 5].Value = newItem.Category;
-                worksheet.Cells[newRow, 6].Value = newItem.LocationCode;
-                worksheet.Cells[newRow, 7].Value = newItem.Position;
-                worksheet.Cells[newRow, 12].Value = newItem.School;
+                int row = 2;
+                foreach (var record in data)
+                {
+                    worksheet.Cells[row, 1].Value = record.Id;
+                    worksheet.Cells[row, 2].Value = record.FirstName;
+                    worksheet.Cells[row, 3].Value = record.LastName;
+                    worksheet.Cells[row, 4].Value = record.MiddleName;
+                    worksheet.Cells[row, 5].Value = record.Category;
+                    worksheet.Cells[row, 6].Value = record.LocationCode;
+                    worksheet.Cells[row, 7].Value = record.Position;
+                    worksheet.Cells[row, 12].Value = record.School;
+                    row++;
+                }
 
                 package.Save();
             }
