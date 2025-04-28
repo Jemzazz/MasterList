@@ -1,31 +1,31 @@
 ﻿@model MasterList.Models.MList
 
-<dt class="col-sm-3">ID</dt>
+<dt class="col-sm-3 fw-bold text-muted">ID</dt>
 <dd class="col-sm-9">@Model.Id</dd>
 
-<dt class="col-sm-3">First Name</dt>
+<dt class="col-sm-3 fw-bold text-muted">First Name</dt>
 <dd class="col-sm-9">@Model.FirstName</dd>
 
-<dt class="col-sm-3">Last Name</dt>
+<dt class="col-sm-3 fw-bold text-muted">Last Name</dt>
 <dd class="col-sm-9">@Model.LastName</dd>
 
-<dt class="col-sm-3">Middle Name</dt>
+<dt class="col-sm-3 fw-bold text-muted">Middle Name</dt>
 <dd class="col-sm-9">@Model.MiddleName</dd>
 
-<dt class="col-sm-3">Category</dt>
+<dt class="col-sm-3 fw-bold text-muted">Category</dt>
 <dd class="col-sm-9">
     <span class="badge @GetCategoryBadgeClass(Model.Category)">
         @Model.Category
     </span>
 </dd>
 
-<dt class="col-sm-3">Location Code</dt>
+<dt class="col-sm-3 fw-bold text-muted">Location Code</dt>
 <dd class="col-sm-9">@Model.LocationCode</dd>
 
-<dt class="col-sm-3">Position</dt>
+<dt class="col-sm-3 fw-bold text-muted">Position</dt>
 <dd class="col-sm-9">@Model.Position</dd>
 
-<dt class="col-sm-3">School</dt>
+<dt class="col-sm-3 fw-bold text-muted">School</dt>
 <dd class="col-sm-9">
     @if (string.IsNullOrEmpty(Model.School))
     {
@@ -42,9 +42,10 @@
     {
         return category switch
         {
-            "ELEM" => "bg-primary",
-            "SEC" => "bg-success",
-            "SHS" => "bg-info",
+            "ALS MOBILE TEACHER" => "bg-primary",
+            "ELEM" => "bg-success",
+            "SEC" => "bg-info",
+            "SHS" => "bg-warning",
             _ => "bg-secondary"
         };
     }

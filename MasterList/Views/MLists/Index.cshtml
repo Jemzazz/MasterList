@@ -52,11 +52,23 @@
 
     <div class="card shadow-sm">
         <div class="card-body">
+
+            <!-- ADDED: Button container with flex for better alignment -->
+            <div class="d-flex flex-wrap gap-2 mb-3 align-items-center">
+                <div id="datatable-buttons"></div> <!-- Moved DataTables buttons here -->
+                <button id="arrangeAlphabeticallyButton" class="btn btn-success">
+                    <i class="fas fa-sort-alpha-down"></i> Arrange Alphabetically
+                </button>
+            </div>
+            <!-- END ADDED -->
+            <!-- Toast Message -->
+            <div id="toast" class="toast-message">✔ Records arranged alphabetically!</div>
+
             <div class="table-responsive">
                 <table class="table table-striped table-hover table-bordered" id="masterTable">
                     <thead class="table-primary">
                         <tr>
-                            <th class="text-center">ID</th>
+                            <th class="text-center">No. </th>
                             <th>First Name</th>
                             <th>Last Name</th>
                             <th>Middle Name</th>
@@ -71,7 +83,7 @@
                         @foreach (var item in Model)
                         {
                             <tr>
-                                <td class="text-center">@item.Id</td>
+                                <td class="text-center"></td> <!-- Empty cell will be populated by DataTables -->
                                 <td>@item.FirstName</td>
                                 <td>@item.LastName</td>
                                 <td>@item.MiddleName</td>
@@ -156,9 +168,40 @@
             border-radius: 0.5rem;
         }
 
+        /* Adjusted gap between DataTables buttons */
         .dt-buttons .btn {
             margin-right: 5px;
         }
+
+        /* Toast styling */
+        .toast-message {
+            visibility: hidden;
+            min-width: 250px;
+            background-color: #198754;
+            color: white;
+            text-align: center;
+            border-radius: 8px;
+            padding: 12px;
+            position: fixed;
+            z-index: 9999;
+            right: 20px;
+            top: 20px;
+            font-size: 1rem;
+            transition: visibility 0s, opacity 0.5s ease-in-out;
+            opacity: 0;
+        }
+
+            .toast-message.show {
+                visibility: visible;
+                opacity: 1;
+            }
+
+        /* ADDED: Fix layout shifting when paging */
+        #masterTable_wrapper .dataTables_scrollBody {
+            max-height: 70vh; /* you can change to 600px if you want fixed */
+            overflow-y: auto;
+        }
+        /* END ADDED */
     </style>
 }
 
@@ -173,14 +216,17 @@
     <script src="https://cdn.datatables.net/buttons/2.2.2/js/buttons.colVis.min.js"></script>
 
     <script>
-        $(document).ready(function() {
+           $(document).ready(function() {
             var table = $('#masterTable').DataTable({
                 dom: '<"top"Bf>rt<"bottom"lip><"clear">',
                 buttons: [
                     {
                         extend: 'copy',
                         className: 'btn btn-secondary',
-                        text: '<i class="fas fa-copy"></i> Copy'
+                        text: '<i class="fas fa-copy"></i> Copy',
+                        exportOptions: {
+                            columns: ':visible:not(:last-child)'
+                        }
                     },
                     {
                         extend: 'excel',
@@ -217,27 +263,56 @@
                 ],
                 responsive: true,
                 pageLength: 25,
-                order: [[0, 'asc']],
+                order: [[1, 'asc']], // Default sort by First Name (column index 1)
                 columnDefs: [
-                    { orderable: false, targets: [8] } // Make Actions column not sortable
-                ],
-                initComplete: function() {
-                    // Apply category filter if coming back from edit
-                    var urlParams = new URLSearchParams(window.location.search);
-                    if (urlParams.has('category')) {
-                        $('#categoryFilter').val(urlParams.get('category'));
-                        table.column(4).search(urlParams.get('category')).draw();
+                    {
+                        orderable: false,
+                        targets: [0, 8] // Make # and Actions columns not sortable
+                    },
+                    {
+                        className: 'dt-center',
+                        targets: [0] // Center align the # column
+                    },
+                    {
+                        render: function (data, type, row, meta) {
+                            if (type === 'display') {
+                                return meta.row + 1 + meta.settings._iDisplayStart;
+                            }
+                            return data;
+                        },
+                        targets: 0
                     }
+                ],
+                drawCallback: function() {
+                    var api = this.api();
+                    api.column(0, { search: 'applied', order: 'applied' }).nodes().each(function(cell, i) {
+                        cell.innerHTML = i + 1;
+                    });
                 }
             });
 
-            // Filter form submission
+            // Move buttons inside our flex container
+            table.buttons().container().appendTo('#datatable-buttons'); // ADDED
+
+            // Alphabetical sort button
+            $('#arrangeAlphabeticallyButton').click(function() {
+                table.order([1, 'asc']).draw(); // Sort by First Name (column index 1)
+                showToast("Records sorted alphabetically by first name!");
+            });
+
+            function showToast(message) {
+                var toast = $('#toast');
+                toast.text(message).addClass('show');
+                setTimeout(function() {
+                    toast.removeClass('show');
+                }, 3000);
+            }
+
             $('#filterForm').on('submit', function(e) {
                 e.preventDefault();
                 applyFilters();
             });
 
-            // Reset filters
             $('#resetFilters').on('click', function() {
                 $('#categoryFilter').val('');
                 $('#locationFilter').val('');

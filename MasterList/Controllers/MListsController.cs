@@ -89,7 +89,7 @@ namespace MasterList.Controllers
             var writer = new ExcelWriterService();
             writer.WriteToExcel(filePath, existingRecords);
 
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(Create));
         }
 
         public IActionResult FixDuplicates()
@@ -117,6 +117,11 @@ namespace MasterList.Controllers
             }
         }
 
+
+
+
+
+
         // GET: MLists/Edit/5
         public IActionResult Edit(int? id)
         {
@@ -134,6 +139,9 @@ namespace MasterList.Controllers
                 return RedirectToAction(nameof(Index));
             }
         }
+
+
+
 
         // POST: MLists/Edit/5
         [HttpPost]

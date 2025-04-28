@@ -4,6 +4,9 @@
 }
 
 <div class="container mt-4">
+    <!-- Toast Message -->
+    <div id="toast" class="toast-message"></div>
+
     <div class="card shadow-sm">
         <div class="card-header bg-primary text-white">
             <h4 class="mb-0">@ViewData["Title"]</h4>
@@ -176,6 +179,21 @@
         .btn i {
             margin-right: 5px;
         }
+
+        /* Toast Message */
+        .toast-message {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: #198754;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-size: 1rem;
+            z-index: 1050;
+            display: none;
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+        }
     </style>
 }
 
@@ -185,8 +203,8 @@
     }
     <script>
         // Enhance select dropdowns with search functionality
-        $(document).ready(function() {
-            $('select').each(function() {
+        $(document).ready(function () {
+            $('select').each(function () {
                 if (this.options.length > 10) {
                     $(this).select2({
                         placeholder: $(this).find('option:first').text(),
@@ -195,6 +213,16 @@
                     });
                 }
             });
+
+            var successMessage = '@TempData["SuccessMessage"]';
+            if (successMessage) {
+                showToast(successMessage);
+            }
         });
+
+        function showToast(message) {
+            var toast = $('#toast');
+            toast.text(message).fadeIn(400).delay(2500).fadeOut(400);
+        }
     </script>
 }
