@@ -117,6 +117,38 @@ namespace MasterList.Controllers
             }
         }
 
+        //[HttpGet]
+        //public IActionResult ExportToExcel()
+        //{
+        //    try
+        //    {
+        //        // Get the data (excluding header row if needed)
+        //        var data = _reader.ReadExcelFile(_excelPath)
+        //                         .Where(x => x.Id != 0)
+        //                         .ToList();
+
+        //        // Generate a unique filename
+        //        string fileName = $"MasterList_Export_{DateTime.Now:yyyyMMddHHmmss}.xlsx";
+
+        //        // Create a memory stream instead of temp file
+        //        using (var memoryStream = new MemoryStream())
+        //        {
+        //            // Write to the memory stream
+        //            _writer.WriteToExcel(memoryStream, data);
+
+        //            // Return the file
+        //            return File(memoryStream.ToArray(),
+        //                       "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        //                       fileName);
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        // Log the error (add this to your error handling)
+        //        TempData["ErrorMessage"] = $"Export failed: {ex.Message}";
+        //        return RedirectToAction(nameof(Index));
+        //    }
+        //}
 
 
 
