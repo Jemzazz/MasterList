@@ -20,13 +20,48 @@
                         <label class="form-label">Category</label>
                         <select class="form-select" id="categoryFilter">
                             <option value="">All Categories</option>
-                            <option value="ELEM">Elementary</option>
-                            <option value="SEC">Secondary</option>
-                            <option value="NON-TEACHING">Non-Teaching</option>
-                            <option value="SHS">Senior High</option>
-                            <option value="DECEASED">Deceased</option>
-                            <option value="RESIGNED">Resigned</option>
-                            <option value="TRANSFERRED">Transferred</option>
+                            <option value="ALS MOBILE TEACHER">ALS MOBILE TEACHER</option>
+                            <option value="DECEASED">DECEASED</option>
+                            <option value="DECLINED">DECLINED</option>
+                            <option value="DISMISSED">DISMISSED</option>
+                            <option value="DROPPED FROM THE ROLLS">DROPPED FROM THE ROLLS</option>
+                            <option value="ELEM">ELEM</option>
+                            <option value="NON-TEACHING">NON-TEACHING</option>
+                            <option value="RESIGN">RESIGN</option>
+                            <option value="RETIRED">RETIRED</option>
+                            <option value="SEC">SEC</option>
+                            <option value="SEPARATED">SEPARATED</option>
+                            <option value="TERMINATED">TERMINATED</option>
+                            <option value="TRANSFERED">TRANSFERED</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Station</label>
+                        <select class="form-select" id="stationFilter">
+                            <option value="">All Stations</option>
+                            <option value="BULACAO NHS">BULACAO NHS</option>
+                            <option value="CANDULAWAN NHS">CANDULAWAN NHS</option>
+                            <option value="CANSOJONG NHS">CANSOJONG NHS</option>
+                            <option value="DIVISION OFFICE">DIVISION OFFICE</option>
+                            <option value="DUMLOG NHS">DUMLOG NHS</option>
+                            <option value="DUMLOG EHS">DUMLOG EHS</option>
+                            <option value="JACLUPAN NHS">JACLUPAN NHS</option>
+                            <option value="LAGTANG NHS">LAGTANG NHS</option>
+                            <option value="LAWAAN III NHS">LAWAAN III NHS</option>
+                            <option value="LAWAAN NHS">LAWAAN NHS</option>
+                            <option value="MOHON DA NHS">MOHON DA NHS</option>
+                            <option value="MOHON ES">MOHON ES</option>
+                            <option value="MOHON NHS">MOHON NHS</option>
+                            <option value="POOC NHS">POOC NHS</option>
+                            <option value="SAN ROQUE NHS">SAN ROQUE NHS</option>
+                            <option value="SAN ISIDRO NHS">SAN ISIDRO NHS</option>
+                            <option value="TABUNOK NHS">TABUNOK NHS</option>
+                            <option value="TALISAY CITY CENTRAL SCHOOL">TALISAY CITY CENTRAL SCHOOL</option>
+                            <option value="TALISAY CITY NHS">TALISAY CITY NHS</option>
+                            <option value="TALISAY CITY SCIENCE HS">TALISAY CITY SCIENCE HS</option>
+                            <option value="TANGKE NHS">TANGKE NHS</option>
+                            <option value="TAPUL NHS">TAPUL NHS</option>
+                           
                         </select>
                     </div>
                     <div class="col-md-3">
@@ -37,7 +72,7 @@
                         <label class="form-label">Position</label>
                         <input type="text" class="form-control" id="positionFilter" placeholder="Filter by position">
                     </div>
-                    <div class="col-md-3 d-flex align-items-end">
+                    <div class="col-md-12 d-flex align-items-end justify-content-end">
                         <button type="button" class="btn btn-secondary me-2" id="resetFilters">
                             <i class="fas fa-undo"></i> Reset
                         </button>
@@ -52,31 +87,25 @@
 
     <div class="card shadow-sm">
         <div class="card-body">
-
-            <!-- ADDED: Button container with flex for better alignment -->
             <div class="d-flex flex-wrap gap-2 mb-3 align-items-center">
                 <div id="datatable-buttons"></div>
-                <!-- Moved DataTables buttons here -->
-                <button id="arrangeAlphabeticallyButton" class="btn btn-success">
-                    <i class="fas fa-sort-alpha-down"></i> Arrange Alphabetically
-                </button>
+            
             </div>
-            <!-- END ADDED -->
-            <!-- Toast Message -->
+
             <div id="toast" class="toast-message">✔ Records arranged alphabetically!</div>
 
             <div class="table-responsive">
                 <table class="table table-striped table-hover table-bordered" id="masterTable">
                     <thead class="table-primary">
                         <tr>
-                            <th class="text-center">No. </th>
+                            <th class="text-center">No.</th>
                             <th>First Name</th>
                             <th>Last Name</th>
                             <th>Middle Name</th>
                             <th>Category</th>
                             <th>Location Code</th>
                             <th>Position</th>
-                            <th>School</th>
+                            <th>Station</th>
                             <th class="text-center">Actions</th>
                         </tr>
                     </thead>
@@ -84,7 +113,7 @@
                         @foreach (var item in Model)
                         {
                             <tr>
-                                <td class="text-center"></td> <!-- Empty cell will be populated by DataTables -->
+                                <td class="text-center"></td>
                                 <td>@item.FirstName</td>
                                 <td>@item.LastName</td>
                                 <td>@item.MiddleName</td>
@@ -215,9 +244,8 @@
     <script src="https://cdn.datatables.net/buttons/2.2.2/js/buttons.html5.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/2.2.2/js/buttons.print.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/2.2.2/js/buttons.colVis.min.js"></script>
-
     <script>
-           $(document).ready(function() {
+        $(document).ready(function() {
             var table = $('#masterTable').DataTable({
                 dom: '<"top"Bf>rt<"bottom"lip><"clear">',
                 buttons: [
@@ -226,7 +254,16 @@
                         className: 'btn btn-secondary',
                         text: '<i class="fas fa-copy"></i> Copy',
                         exportOptions: {
-                            columns: ':visible:not(:last-child)'
+                            columns: ':visible:not(:last-child)',
+                            format: {
+                                body: function(data, row, column, node) {
+                                    // Handle station display in exports
+                                    if (column === 7) { // Station column
+                                        return data === 'Not specified' ? '' : data;
+                                    }
+                                    return data;
+                                }
+                            }
                         }
                     },
                     {
@@ -235,7 +272,15 @@
                         text: '<i class="fas fa-file-excel"></i> Excel',
                         title: 'Master List Export',
                         exportOptions: {
-                            columns: ':visible:not(:last-child)'
+                            columns: ':visible:not(:last-child)',
+                            format: {
+                                body: function(data, row, column, node) {
+                                    if (column === 7) { // Station column
+                                        return data === 'Not specified' ? '' : data;
+                                    }
+                                    return data;
+                                }
+                            }
                         }
                     },
                     {
@@ -264,11 +309,11 @@
                 ],
                 responsive: true,
                 pageLength: 25,
-                order: [[1, 'asc']], // Default sort by First Name (column index 1)
+                order: [[1, 'asc']],
                 columnDefs: [
                     {
                         orderable: false,
-                        targets: [0, 8] // Make # and Actions columns not sortable
+                        targets: [0, 8] // # and Actions columns
                     },
                     {
                         className: 'dt-center',
@@ -276,28 +321,30 @@
                     },
                     {
                         render: function (data, type, row, meta) {
-                            if (type === 'display') {
-                                return meta.row + 1 + meta.settings._iDisplayStart;
+                            if (meta.col === 7 && (data === null || data === '')) {
+                                return type === 'export' ? '' : '<span class="text-muted">Not specified</span>';
+                            }
+                            if (meta.col === 0) {
+                                return (meta.row + 1).toString();
                             }
                             return data;
                         },
-                        targets: 0
+                        targets: [0, 7] // Apply to # and Station columns
                     }
                 ],
                 drawCallback: function() {
-                    var api = this.api();
-                    api.column(0, { search: 'applied', order: 'applied' }).nodes().each(function(cell, i) {
+                    this.api().column(0).nodes().each(function(cell, i) {
                         cell.innerHTML = i + 1;
                     });
                 }
             });
 
-            // Move buttons inside our flex container
-            table.buttons().container().appendTo('#datatable-buttons'); // ADDED
+            // Move buttons to container
+            table.buttons().container().appendTo('#datatable-buttons');
 
             // Alphabetical sort button
             $('#arrangeAlphabeticallyButton').click(function() {
-                table.order([1, 'asc']).draw(); // Sort by First Name (column index 1)
+                table.order([1, 'asc']).draw();
                 showToast("Records sorted alphabetically by first name!");
             });
 
@@ -316,16 +363,41 @@
 
             $('#resetFilters').on('click', function() {
                 $('#categoryFilter').val('');
+                $('#stationFilter').val('');
                 $('#locationFilter').val('');
                 $('#positionFilter').val('');
                 applyFilters();
             });
 
             function applyFilters() {
+                // Column indexes:
+                // 0: #, 1: FirstName, 2: LastName, 3: MiddleName,
+                // 4: Category, 5: LocationCode, 6: Position, 7: Station, 8: Actions
+
                 table.column(4).search($('#categoryFilter').val());
                 table.column(5).search($('#locationFilter').val());
                 table.column(6).search($('#positionFilter').val());
+
+                // Station filter (column 7 in table)
+                var stationValue = $('#stationFilter').val();
+                if (stationValue === "") {
+                    table.column(7).search('');
+                } else {
+                    table.column(7).search('^' + stationValue + '$', true, false);
+                }
+
                 table.draw();
+            }
+
+            // Initialize from URL parameters
+            var urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.has('station')) {
+                $('#stationFilter').val(urlParams.get('station'));
+                applyFilters();
+            }
+            if (urlParams.has('category')) {
+                $('#categoryFilter').val(urlParams.get('category'));
+                applyFilters();
             }
         });
     </script>

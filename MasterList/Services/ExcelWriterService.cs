@@ -28,8 +28,8 @@ namespace MasterList.Services
                 worksheet.Cells[1, 4].Value = "Middle Name";
                 worksheet.Cells[1, 5].Value = "Category";
                 worksheet.Cells[1, 6].Value = "Location Code";
-                worksheet.Cells[1, 7].Value = "Position";
-                worksheet.Cells[1, 8].Value = "School";
+                worksheet.Cells[1, 7].Value = "Position";   
+                worksheet.Cells[1, 12].Value = "School";
 
                 // Style the header
                 using (var range = worksheet.Cells[1, 1, 1, 8])
@@ -52,7 +52,7 @@ namespace MasterList.Services
                     worksheet.Cells[row, 5].Value = record.Category;
                     worksheet.Cells[row, 6].Value = record.LocationCode;
                     worksheet.Cells[row, 7].Value = record.Position;
-                    worksheet.Cells[row, 8].Value = string.IsNullOrWhiteSpace(record.School) ? "Not specified" : record.School;
+                    worksheet.Cells[row,  12].Value = string.IsNullOrWhiteSpace(record.School) ? "Not specified" : record.School;
 
                     // Center the sequence number
                     worksheet.Cells[row, 1].Style.HorizontalAlignment =
