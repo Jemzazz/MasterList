@@ -1,0 +1,12 @@
+services:
+  - type: web
+    name: masterlist-web
+    runtime: dotnet
+    repo: https://github.com/Jemzazz/MasterList
+    branch: main
+    rootDir: MasterList
+    buildCommand: dotnet publish -c Release -o out
+    startCommand: dotnet MasterList.dll
+    envVars:
+      - key: ASPNETCORE_ENVIRONMENT
+        value: Production
