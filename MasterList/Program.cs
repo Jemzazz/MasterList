@@ -9,6 +9,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<MasterListContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("MasterListContext") ?? throw new InvalidOperationException("Connection string 'MasterListContext' not found.")));
 
+builder.WebHost.UseUrls("http://*:$PORT");
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
