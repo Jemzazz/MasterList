@@ -1,0 +1,21 @@
+# Use the official .NET 8 SDK image to build the app
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+WORKDIR /app
+
+# Copy csproj and restore as distinct layers
+COPY *.sln .
+COPY MasterList/*.csproj ./MasterList/
+RUN dotnet restore
+
+# Copy everything else and build
+COPY MasterList/. ./MasterList/
+WORKDIR /app/MasterList
+RUN dotnet publish -c Release -o out
+
+# Use the official ASP.NET runtime image for the app runtime
+FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS runtime
+WORKDIR /app
+COPY --from=build /app/MasterList/out ./
+ENTRYPOINT ["dotnet", "MasterList.dll"]
+
+Add Dockerfile for deployment
