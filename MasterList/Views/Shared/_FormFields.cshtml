@@ -51,13 +51,16 @@
     <label asp-for="Position" class="form-label">Position</label>
     <select asp-for="Position" class="form-select">
         <option value="">-- Select Position --</option>
+        <option value="ACCOUNTANT III">ACCOUNTANT III</option>
         <option value="ADMINISTRATIVE AIDE I">ADMINISTRATIVE AIDE I</option>
-        <option value="ADMINISTRTIVE ASSISTANT II">ADMINISTRTIVE ASSISTANT II</option>
+        <option value="ADMINISTRATIVE ASSISTANT II">ADMINISTRATIVE ASSISTANT II</option>
         <option value="ADMINISTRATIVE ASSISTANT III">ADMINISTRATIVE ASSISTANT III</option>
         <option value="ADMINISTRATIVE OFFICER II">ADMINISTRATIVE OFFICER II</option>
-        <option value="ADMINISTRAIVE OFFICER III">ADMINISTRAIVE OFFICER III</option>
+        <option value="ADMINISTRATIVE OFFICER III">ADMINISTRATIVE OFFICER III</option>
+        <option value="ASDS">ASDS</option>
+        <option value="CID CHIEF">CID CHIEF</option>
         <option value="EDUCATION PROGRAM SUPERVISOR">EDUCATION PROGRAM SUPERVISOR</option>
-        <option value="ELEMTARY GRADE TEACHER">ELEMTARY GRADE TEACHER</option>
+        <option value="ELEMENTARY GRADE TEACHER">ELEMENTARY GRADE TEACHER</option>
         <option value="ELEMENTARY SCHOOL PRINCIPAL I">ELEMENTARY SCHOOL PRINCIPAL I</option>
         <option value="GUIDANCE CORDINATOR III">GUIDANCE CORDINATOR III</option>
         <option value="HEAD TEACHER I">HEAD TEACHER I</option>
@@ -70,25 +73,30 @@
         <option value="MEDICAL OFFICER III">MEDICAL OFFICER III</option>
         <option value="NURSE II">NURSE II</option>
         <option value="NURSE II(SHS)">NURSE II(SHS)</option>
-        <option value="PUBLIC SHOOL DISTRICT SUPERVISOR">PUBLIC SHOOL DISTRICT SUPERVISOR</option>
-        <option value="SCHOOL JANITOR">SCHOOL JANITOR</option>
-        <option value="SCHOOL PRINCIPAL I">SCHOOL PRINCIPAL I</option>
+        <option value="PDO I">PDO I</option>
+        <option value="PDO II">PDO II</option>
+        <option value="PUBLIC SCHOOL DISTRICT SUPERVISOR">PUBLIC SCHOOL DISTRICT SUPERVISOR</option>
+        <option value="REGISTRAR I">REGISTRAR I</option>
         <option value="SCHOOL DIVISION SUPERINTENDENT">SCHOOL DIVISION SUPERINTENDENT</option>
         <option value="SCHOOL DIVISION SUPERINTENDENT(OIC)">SCHOOL DIVISION SUPERINTENDENT(OIC)</option>
+        <option value="SCHOOL JANITOR">SCHOOL JANITOR</option>
+        <option value="SCHOOL PRINCIPAL I">SCHOOL PRINCIPAL I</option>
+        <option value="SDS">SDS</option>
         <option value="SENIOR EDUCATION PROGRAM SPECIALIST">SENIOR EDUCATION PROGRAM SPECIALIST</option>
+        <option value="SGOD CHIEF">SGOD CHIEF</option>
         <option value="SPECIAL EDUCATION TEACHER I">SPECIAL EDUCATION TEACHER I</option>
         <option value="SPECIAL EDUCATION TEACHER II">SPECIAL EDUCATION TEACHER II</option>
         <option value="SPECIAL EDUCATION TEACHER III">SPECIAL EDUCATION TEACHER III</option>
         <option value="SPECIAL SCIENCE TEACHER I">SPECIAL SCIENCE TEACHER I</option>
         <option value="SPECIAL SCIENCE TEACHER I(SHS)">SPECIAL SCIENCE TEACHER I(SHS)</option>
-        <option value="TEACHER I">TEACHER I</option>
-        <option value="TEACHER II">TEACHER II</option>
-        <option value="TEACHER III">TEACHER III</option>
-        <option value="TEACHER(SHS)">TEACHER(SHS)</option>
-        <option value="TEACHER I(SHS)">TEACHER I(SHS)</option>
-        <option value="TEACHER II(SHS)">TEACHER II(SHS)</option>
-        <option value="TEACHER III(SHS)">TEACHER III(SHS)</option>
         <option value="TEACHER 1(ALS)">TEACHER 1(ALS)</option>
+        <option value="TEACHER I">TEACHER I</option>
+        <option value="TEACHER I(SHS)">TEACHER I(SHS)</option>
+        <option value="TEACHER II">TEACHER II</option>
+        <option value="TEACHER II(SHS)">TEACHER II(SHS)</option>
+        <option value="TEACHER III">TEACHER III</option>
+        <option value="TEACHER III(SHS)">TEACHER III(SHS)</option>
+        <option value="TEACHER(SHS)">TEACHER(SHS)</option>
         <option value="UTILITY WORKER I">UTILITY WORKER I</option>
     </select>
     <span asp-validation-for="Position" class="text-danger"></span>
@@ -99,28 +107,53 @@
     <label asp-for="School" class="form-label">School</label>
     <select asp-for="School" class="form-select">
         <option value="">-- Select School --</option>
+        <option value="BBES">BBES</option>
+        <option value="BIASONG ES">BIASONG ES</option>
+        <option value="BULACAO ES">BULACAO ES</option>
         <option value="BULACAO NHS">BULACAO NHS</option>
+        <option value="CAMP 4 ES">CAMP 4 ES</option>
+        <option value="CAMPINSA ES">CAMPINSA ES</option>
+        <option value="CANDULAWAN ES">CANDULAWAN ES</option>
         <option value="CANDULAWAN NHS">CANDULAWAN NHS</option>
         <option value="CANSOJONG NHS">CANSOJONG NHS</option>
         <option value="DIVISION OFFICE">DIVISION OFFICE</option>
-        <option value="DUMLOG NHS">DUMLOG NHS</option>
         <option value="DUMLOG EHS">DUMLOG EHS</option>
+        <option value="DUMLOG ES">DUMLOG ES</option>
+        <option value="DUMLOG NHS">DUMLOG NHS</option>
+        <option value="HAWANAY ES">HAWANAY ES</option>
+        <option value="IBA ES">IBA ES</option>
+        <option value="JACLUPAN ES">JACLUPAN ES</option>
         <option value="JACLUPAN NHS">JACLUPAN NHS</option>
+        <option value="LAGTANG ES">LAGTANG ES</option>
         <option value="LAGTANG NHS">LAGTANG NHS</option>
+        <option value="LARAY ES">LARAY ES</option>
+        <option value="LAWAAN ES">LAWAAN ES</option>
+        <option value="LAWAAN III ES">LAWAAN III ES</option>
         <option value="LAWAAN III NHS">LAWAAN III NHS</option>
         <option value="LAWAAN NHS">LAWAAN NHS</option>
+        <option value="LINAO ES">LINAO ES</option>
+        <option value="MAGHAWAY ES">MAGHAWAY ES</option>
+        <option value="MANIPIS ES">MANIPIS ES</option>
+        <option value="MANGUILAMON ES">MANGUILAMON ES</option>
         <option value="MOHON DA NHS">MOHON DA NHS</option>
         <option value="MOHON ES">MOHON ES</option>
         <option value="MOHON NHS">MOHON NHS</option>
         <option value="POOC NHS">POOC NHS</option>
-        <option value="SAN ROQUE NHS">SAN ROQUE NHS</option>
+        <option value="SAN ISIDRO ES">SAN ISIDRO ES</option>
         <option value="SAN ISIDRO NHS">SAN ISIDRO NHS</option>
+        <option value="SAN ROQUE ES">SAN ROQUE ES</option>
+        <option value="SAN ROQUE NHS">SAN ROQUE NHS</option>
+        <option value="TABUNOC ES">TABUNOC ES</option>
         <option value="TABUNOK NHS">TABUNOK NHS</option>
         <option value="TALISAY CITY CENTRAL SCHOOL">TALISAY CITY CENTRAL SCHOOL</option>
         <option value="TALISAY CITY NHS">TALISAY CITY NHS</option>
         <option value="TALISAY CITY SCIENCE HS">TALISAY CITY SCIENCE HS</option>
+        <option value="TANKE ES">TANKE ES</option>
         <option value="TANGKE NHS">TANGKE NHS</option>
+        <option value="TAPUL ES">TAPUL ES</option>
         <option value="TAPUL NHS">TAPUL NHS</option>
+        <option value="TCG ES">TCG ES</option>
+        <option value="UAM ES">UAM ES</option>
     </select>
     <span asp-validation-for="School" class="text-danger"></span>
 </div>

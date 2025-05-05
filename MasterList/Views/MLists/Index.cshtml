@@ -16,7 +16,7 @@
         <div class="card-body">
             <form id="filterForm">
                 <div class="row g-3">
-                    <div class="col-md-3">
+                   @*  <div class="col-md-3">
                         <label class="form-label">Category</label>
                         <select class="form-select" id="categoryFilter">
                             <option value="">All Categories</option>
@@ -34,33 +34,58 @@
                             <option value="TERMINATED">TERMINATED</option>
                             <option value="TRANSFERED">TRANSFERED</option>
                         </select>
-                    </div>
+                    </div> *@
                     <div class="col-md-3">
                         <label class="form-label">Station</label>
                         <select class="form-select" id="stationFilter">
-                            <option value="">All Stations</option>
+                            <option value="">-- All Station --</option>
+                            <option value="BBES">BBES</option>
+                            <option value="BIASONG ES">BIASONG ES</option>
+                            <option value="BULACAO ES">BULACAO ES</option>
                             <option value="BULACAO NHS">BULACAO NHS</option>
+                            <option value="CAMP 4 ES">CAMP 4 ES</option>
+                            <option value="CAMPINSA ES">CAMPINSA ES</option>
+                            <option value="CANDULAWAN ES">CANDULAWAN ES</option>
                             <option value="CANDULAWAN NHS">CANDULAWAN NHS</option>
                             <option value="CANSOJONG NHS">CANSOJONG NHS</option>
                             <option value="DIVISION OFFICE">DIVISION OFFICE</option>
-                            <option value="DUMLOG NHS">DUMLOG NHS</option>
                             <option value="DUMLOG EHS">DUMLOG EHS</option>
+                            <option value="DUMLOG ES">DUMLOG ES</option>
+                            <option value="DUMLOG NHS">DUMLOG NHS</option>
+                            <option value="HAWANAY ES">HAWANAY ES</option>
+                            <option value="IBA ES">IBA ES</option>
+                            <option value="JACLUPAN ES">JACLUPAN ES</option>
                             <option value="JACLUPAN NHS">JACLUPAN NHS</option>
+                            <option value="LAGTANG ES">LAGTANG ES</option>
                             <option value="LAGTANG NHS">LAGTANG NHS</option>
+                            <option value="LARAY ES">LARAY ES</option>
+                            <option value="LAWAAN ES">LAWAAN ES</option>
+                            <option value="LAWAAN III ES">LAWAAN III ES</option>
                             <option value="LAWAAN III NHS">LAWAAN III NHS</option>
                             <option value="LAWAAN NHS">LAWAAN NHS</option>
+                            <option value="LINAO ES">LINAO ES</option>
+                            <option value="MAGHAWAY ES">MAGHAWAY ES</option>
+                            <option value="MANIPIS ES">MANIPIS ES</option>
+                            <option value="MANGUILAMON ES">MANGUILAMON ES</option>
                             <option value="MOHON DA NHS">MOHON DA NHS</option>
                             <option value="MOHON ES">MOHON ES</option>
                             <option value="MOHON NHS">MOHON NHS</option>
                             <option value="POOC NHS">POOC NHS</option>
-                            <option value="SAN ROQUE NHS">SAN ROQUE NHS</option>
+                            <option value="SAN ISIDRO ES">SAN ISIDRO ES</option>
                             <option value="SAN ISIDRO NHS">SAN ISIDRO NHS</option>
+                            <option value="SAN ROQUE ES">SAN ROQUE ES</option>
+                            <option value="SAN ROQUE NHS">SAN ROQUE NHS</option>
+                            <option value="TABUNOC ES">TABUNOC ES</option>
                             <option value="TABUNOK NHS">TABUNOK NHS</option>
                             <option value="TALISAY CITY CENTRAL SCHOOL">TALISAY CITY CENTRAL SCHOOL</option>
                             <option value="TALISAY CITY NHS">TALISAY CITY NHS</option>
                             <option value="TALISAY CITY SCIENCE HS">TALISAY CITY SCIENCE HS</option>
+                            <option value="TANKE ES">TANKE ES</option>
                             <option value="TANGKE NHS">TANGKE NHS</option>
+                            <option value="TAPUL ES">TAPUL ES</option>
                             <option value="TAPUL NHS">TAPUL NHS</option>
+                            <option value="TCG ES">TCG ES</option>
+                            <option value="UAM ES">UAM ES</option>
                            
                         </select>
                     </div>
@@ -136,8 +161,8 @@
                                     }
                                     else
                                     {
-                                        @item.School
-                                    }
+                                        @Html.Raw(Html.Encode(item.School))
+                                    }   
                                 </td>
                                 <td class="text-center">
                                     <div class="btn-group btn-group-sm">
@@ -257,7 +282,6 @@
                             columns: ':visible:not(:last-child)',
                             format: {
                                 body: function(data, row, column, node) {
-                                    // Handle station display in exports
                                     if (column === 7) { // Station column
                                         return data === 'Not specified' ? '' : data;
                                     }
@@ -320,16 +344,19 @@
                         targets: [0] // Center align the # column
                     },
                     {
+                        targets: [7], // Station column only
+                        render: function (data, type, row) {
+                            if (type === 'display') {
+                                return data && data.trim() !== '' ? data : '<span class="text-muted">Not specified</span>';
+                            }
+                            return data; // Return raw data for filtering/sorting
+                        }
+                    },
+                    {
+                        targets: [0], // # column
                         render: function (data, type, row, meta) {
-                            if (meta.col === 7 && (data === null || data === '')) {
-                                return type === 'export' ? '' : '<span class="text-muted">Not specified</span>';
-                            }
-                            if (meta.col === 0) {
-                                return (meta.row + 1).toString();
-                            }
-                            return data;
-                        },
-                        targets: [0, 7] // Apply to # and Station columns
+                            return (meta.row + 1).toString();
+                        }
                     }
                 ],
                 drawCallback: function() {
@@ -337,6 +364,11 @@
                         cell.innerHTML = i + 1;
                     });
                 }
+            });
+
+            // Debug - log filtered data (temporary)
+            table.on('draw', function() {
+                console.log("Current filtered data:", table.rows({ filter: 'applied' }).data().toArray());
             });
 
             // Move buttons to container
@@ -370,20 +402,29 @@
             });
 
             function applyFilters() {
-                // Column indexes:
-                // 0: #, 1: FirstName, 2: LastName, 3: MiddleName,
-                // 4: Category, 5: LocationCode, 6: Position, 7: Station, 8: Actions
+                // Clear all filters first
+                table.columns().search('');
 
-                table.column(4).search($('#categoryFilter').val());
-                table.column(5).search($('#locationFilter').val());
-                table.column(6).search($('#positionFilter').val());
+                // Apply filters only if values exist
+                var categoryFilter = $('#categoryFilter').val();
+                var stationFilter = $('#stationFilter').val();
+                var locationFilter = $('#locationFilter').val();
+                var positionFilter = $('#positionFilter').val();
 
-                // Station filter (column 7 in table)
-                var stationValue = $('#stationFilter').val();
-                if (stationValue === "") {
-                    table.column(7).search('');
-                } else {
-                    table.column(7).search('^' + stationValue + '$', true, false);
+                if (categoryFilter) {
+                    table.column(4).search(categoryFilter, false, false); // Exact match
+                }
+
+                if (locationFilter) {
+                    table.column(5).search(locationFilter);
+                }
+
+                if (positionFilter) {
+                    table.column(6).search(positionFilter);
+                }
+
+                if (stationFilter) {
+                    table.column(7).search('^' + stationFilter + '$', true, false); // Exact match with regex
                 }
 
                 table.draw();
